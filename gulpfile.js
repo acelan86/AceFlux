@@ -5,7 +5,7 @@ var concat = require("gulp-concat");
 
 gulp.task('default', function() {
     gulp.src('src/**.js')
-        .pipe(amdOptimize("Flux"))
+        .pipe(amdOptimize(""))
         .pipe(concat("Flux.js"))
         .pipe(gulp.dest('dist'))
 });
