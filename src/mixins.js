@@ -1,8 +1,7 @@
+define(["./utils"], function (utils) {
 "use strict";
 
-var utils = require("./utils");
-
-module.exports = {
+return {
     // It should be inserted to the React components which
     // used in Flux.
     // Simply `mixin: [Flux.mixins.storeListener]` will work.
@@ -117,4 +116,5 @@ module.exports = {
         }
     }
 };
+});
 

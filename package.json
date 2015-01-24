@@ -7,13 +7,16 @@
     "url": "http://github.com/acelan86/Flux.git"
   },
   "devDependencies": {
+    "amd-optimize": "^0.4.3",
     "gulp": "^3.8.10",
-    "gulp-browserify": "^0.5.1"
+    "gulp-browserify": "^0.5.1",
+    "gulp-concat": "^2.4.3",
+    "gulp-connect": "^2.2.0"
   },
-  "scripts" : {
+  "scripts": {
     "start": "npm install",
-     "postinstall" : "npm run bowerinstall",
-     "bowerinstall" : "bower install",
-     "postbowerinstall": "gulp"
+    "postinstall": "npm run bowerinstall",
+    "bowerinstall": "bower install",
+    "postbowerinstall": "gulp"
   }
 }

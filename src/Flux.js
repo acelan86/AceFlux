@@ -1,9 +1,15 @@
+define([
+  "./Dispatcher",
+  "./Store",
+  "./utils",
+  "./mixins"
+], function(
+  Dispatcher,
+  Store,
+  utils,
+  mixins
+) {
 "use strict";
-
-var Dispatcher = require("./Dispatcher");
-var Store = require("./Store");
-var utils = require("./utils");
-var mixins = require("./mixins");
 
 var Flux = {
 
@@ -58,4 +64,5 @@ var Flux = {
 
 Flux.mixins = mixins;
 
-module.exports = Flux;
+return Flux;
+});

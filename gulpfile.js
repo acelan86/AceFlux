@@ -1,8 +1,25 @@
 var gulp = require("gulp");
-var browserify = require("gulp-browserify");
+var amdOptimize = require("amd-optimize");
+var connect = require("gulp-connect");
+var concat = require("gulp-concat");
 
 gulp.task('default', function() {
-    gulp.src('src/Flux.js')
+    gulp.src('src/**.js')
+        .pipe(amdOptimize("Flux"))
+        .pipe(concat("Flux.js"))
+        .pipe(gulp.dest('dist'))
+});
+
+gulp.task("connect", function () {
+    var connect = require("gulp-connect");
+    
+    connect.server({
+        port: 3333
+    });
+});
+
+gulp.task('utils', function() {
+    gulp.src('src/utils.js')
         .pipe(browserify({
             //insertGlobals : true,
             debug : true

@@ -1,7 +1,5 @@
-"use strict";
-
-var uitls = require("./utils");
-var EventEmitter = require("events").EventEmitter;
+define(["./utils", "bower_components/eventEmitter/EventEmitter"], function (utils, EventEmitter) {
+  "use strict";
 
 function Store(store, args) {
   /* store parameter must be an `object` */
@@ -232,4 +230,5 @@ Store.prototype.onChange = function (callback) {
   this.listener.on('change', callback);
 };
 
-module.exports = Store;
+return Store;
+});
