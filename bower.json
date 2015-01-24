@@ -1,0 +1,13 @@
+{
+  "name": "Flux",
+  "version": "0.1.0",
+  "author": "acelan",
+  "main": [
+    "dist/Flux.js"
+  ],
+  "devDependencies": {
+    "es6-promise": "~2.0.1"
+  },
+  "license": "MIT",
+  "ignore": []
+}

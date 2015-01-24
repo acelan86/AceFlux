@@ -1,0 +1,19 @@
+{
+  "name": "Flux",
+  "version": "0.1.0",
+  "author": "acelan",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/acelan86/Flux.git"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-browserify": "^0.5.1"
+  },
+  "scripts" : {
+    "start": "npm install",
+     "postinstall" : "npm run bowerinstall",
+     "bowerinstall" : "bower install",
+     "postbowerinstall": "gulp"
+  }
+}
