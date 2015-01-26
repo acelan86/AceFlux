@@ -3,10 +3,6 @@
   "version": "0.1.0",
   "author": "acelan",
   "main": [
-    "dist/Store.js",
-    "dist/Dispatcher.js",
-    "dist/utils.js",
-    "dist/mixins.js",
     "dist/Flux.js"
   ],
   "devDependencies": {
