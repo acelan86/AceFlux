@@ -1,5 +1,9 @@
-define(["./utils", "bower_components/eventEmitter/EventEmitter"], function (utils, EventEmitter) {
+define(function (require) {
   "use strict";
+
+  var utils = require("./utils.js");
+  var EventEmitter = require("../bower_components/eventEmitter/EventEmitter.js");
+
 
 function Store(store, args) {
   /* store parameter must be an `object` */

@@ -1,4 +1,4 @@
-define(function (inner) {
+define(function () {
   "use strict";
 
     // ## Private Helper Functions

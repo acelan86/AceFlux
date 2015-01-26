@@ -1,5 +1,10 @@
-define(["./Store", "bower_components/eventEmitter/EventEmitter", "bower_components/es6-promise/promise"], function (Store, EventEmitter, es6) {
+define(function (require) {
   "use strict";
+
+  var Store = require("./Store.js");
+  var EventEmitter = require("../bower_components/eventEmitter/EventEmitter.js");
+  var es6 = require("../bower_components/es6-promise/promise");
+
 
   // ### Dispatcher Helpers
 
