@@ -1,8 +1,5 @@
-define(function (require) {
-  "use strict";
-
-  var utils = require("./utils.js");
-  var EventEmitter = require("../bower_components/eventEmitter/EventEmitter.js");
+var utils = require("./utils.js");
+var EventEmitter = require("../bower_components/eventEmitter/EventEmitter.js");
 
 
 function Store(store, args) {
@@ -234,5 +231,4 @@ Store.prototype.onChange = function (callback) {
   this.listener.on('change', callback);
 };
 
-return Store;
-});
+module.exports = Store;

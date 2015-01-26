@@ -1,4 +1,14 @@
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define(factory);
+	else {
+		var a = factory();
+		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
+	}
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -44,240 +54,229 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require) {
-	  "use strict";
-
-	    var Dispatcher = __webpack_require__(1);
-	    var Store = __webpack_require__(2);
-	    var utils = __webpack_require__(3);
-	    var mixins = __webpack_require__(4);
+	var Dispatcher = __webpack_require__(1);
+	var Store = __webpack_require__(2);
+	var utils = __webpack_require__(3);
+	var mixins = __webpack_require__(4);
 
 
-	    var Flux = {
+	var Flux = {
 
-	        // `createStore` **creates a function to create a store**. So it's like
-	        // a factory.
-	        createStore: function (factoryDefinition) {
-	            return function () {
-	                return new Store(factoryDefinition, arguments);
-	            };
-	        },
+	    // `createStore` **creates a function to create a store**. So it's like
+	    // a factory.
+	    createStore: function (factoryDefinition) {
+	        return function () {
+	            return new Store(factoryDefinition, arguments);
+	        };
+	    },
 
-	        // `createDispatcher` generates a dispatcher with actions to dispatch.
-	        /* `actionsToDispatch` should be an object. */
-	        createDispatcher: function (actionsToDispatch) {
-	            var actionsOfStores, dispatcher, callback, triggers, triggerMethod;
+	    // `createDispatcher` generates a dispatcher with actions to dispatch.
+	    /* `actionsToDispatch` should be an object. */
+	    createDispatcher: function (actionsToDispatch) {
+	        var actionsOfStores, dispatcher, callback, triggers, triggerMethod;
 
-	            // If it has `getStores` method it should be get and pass to the `Dispatcher`
-	            if (typeof actionsToDispatch.getStores === 'function') {
-	                actionsOfStores = actionsToDispatch.getStores();
-	            }
-
-	            /* If there are no stores defined, it's an empty object. */
-	            dispatcher = new Dispatcher(actionsOfStores || {});
-
-	            /* Now call `registerAction` method for every action. */
-	            for (var actionName in actionsToDispatch) {
-	                if (utils.hasOwn(actionsToDispatch, actionName)) {
-	                  /* `getStores` & `viewTriggers` are special properties, it's not an action. */
-	                  if (actionName !== 'getStores' && actionName != 'viewTriggers') {
-	                    callback = actionsToDispatch[actionName];
-	                    dispatcher.registerAction(actionName, callback.bind(dispatcher));
-	                  }
-	                }
-	            }
-
-	              /* Bind triggers */
-	            triggers = actionsToDispatch.viewTriggers;
-	            for (var triggerName in triggers) {
-	                triggerMethod = triggers[triggerName];
-	                if (typeof dispatcher[triggerMethod] === 'function') {
-	                  dispatcher.on(triggerName, dispatcher[triggerMethod]);
-	                } else {
-	                  if (console != null) {
-	                    console.warn(triggerMethod + ' should be a method defined on your dispatcher. The ' + triggerName + ' trigger will not be bound to any method.');
-	                  }
-	                }
-	            }
-
-	            return dispatcher;
+	        // If it has `getStores` method it should be get and pass to the `Dispatcher`
+	        if (typeof actionsToDispatch.getStores === 'function') {
+	            actionsOfStores = actionsToDispatch.getStores();
 	        }
-	    };
 
-	    Flux.mixins = mixins;
+	        /* If there are no stores defined, it's an empty object. */
+	        dispatcher = new Dispatcher(actionsOfStores || {});
 
-	    return Flux;
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	        /* Now call `registerAction` method for every action. */
+	        for (var actionName in actionsToDispatch) {
+	            if (utils.hasOwn(actionsToDispatch, actionName)) {
+	              /* `getStores` & `viewTriggers` are special properties, it's not an action. */
+	              if (actionName !== 'getStores' && actionName != 'viewTriggers') {
+	                callback = actionsToDispatch[actionName];
+	                dispatcher.registerAction(actionName, callback.bind(dispatcher));
+	              }
+	            }
+	        }
+
+	          /* Bind triggers */
+	        triggers = actionsToDispatch.viewTriggers;
+	        for (var triggerName in triggers) {
+	            triggerMethod = triggers[triggerName];
+	            if (typeof dispatcher[triggerMethod] === 'function') {
+	              dispatcher.on(triggerName, dispatcher[triggerMethod]);
+	            } else {
+	              if (console != null) {
+	                console.warn(triggerMethod + ' should be a method defined on your dispatcher. The ' + triggerName + ' trigger will not be bound to any method.');
+	              }
+	            }
+	        }
+
+	        return dispatcher;
+	    }
+	};
+
+	Flux.mixins = mixins;
+
+	module.exports = Flux;
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
-	  "use strict";
-
-	  var Store = __webpack_require__(2);
-	  var EventEmitter = __webpack_require__(5);
-	  var es6 = __webpack_require__(6);
+	var Store = __webpack_require__(2);
+	var EventEmitter = __webpack_require__(5);
+	var es6 = __webpack_require__(6);
 
 
-	  // ### Dispatcher Helpers
+	// ### Dispatcher Helpers
 
-	  // Rollback listener adds a `rollback` event listener to the bunch of
-	  // stores.
-	  function __rollbackListener(stores) {
+	// Rollback listener adds a `rollback` event listener to the bunch of
+	// stores.
+	function __rollbackListener(stores) {
 
-	    function __listener() {
-	      for (var i in stores) {
-	        stores[i].listener.emit('__rollback');
-	      }
-	    }
-
-	    /* If any of them fires `rollback` event, all of the stores
-	       will be emitted to be rolled back with `__rollback` event. */
-	    for (var j in stores) {
-	      stores[j].listener.on('rollback', __listener);
+	  function __listener() {
+	    for (var i in stores) {
+	      stores[i].listener.emit('__rollback');
 	    }
 	  }
 
-	  // ### Dispatcher Prototype
-	  function Dispatcher(stores) {
-	    var self = this;
-	    // `DeLorean.EventEmitter` is `require('events').EventEmitter` by default.
-	    // you can change it using `DeLorean.Flux.define('EventEmitter', AnotherEventEmitter)`
-	    this.listener = new EventEmitter();
-	    this.stores = stores;
-
-	    /* Stores should be listened for rollback events. */
-	    __rollbackListener(Object.keys(stores).map(function (key) {
-	      return stores[key];
-	    }));
+	  /* If any of them fires `rollback` event, all of the stores
+	     will be emitted to be rolled back with `__rollback` event. */
+	  for (var j in stores) {
+	    stores[j].listener.on('rollback', __listener);
 	  }
+	}
 
-	  // `dispatch` method dispatch the event with `data` (or **payload**)
-	  Dispatcher.prototype.dispatch = function (actionName, data) {
-	    var self = this, stores, deferred;
+	// ### Dispatcher Prototype
+	function Dispatcher(stores) {
+	  var self = this;
+	  // `DeLorean.EventEmitter` is `require('events').EventEmitter` by default.
+	  // you can change it using `DeLorean.Flux.define('EventEmitter', AnotherEventEmitter)`
+	  this.listener = new EventEmitter();
+	  this.stores = stores;
 
-	    this.listener.emit('dispatch', actionName, data);
-	    /* Stores are key-value pairs. Collect store instances into an array. */
-	    stores = (function () {
-	      var stores = [], store;
-	      for (var storeName in self.stores) {
-	        store = self.stores[storeName];
-	        /* Store value must be an _instance of Store_. */
-	        if (!store instanceof Store) {
-	          throw 'Given store is not a store instance';
-	        }
-	        stores.push(store);
-	      }
-	      return stores;
-	    }());
+	  /* Stores should be listened for rollback events. */
+	  __rollbackListener(Object.keys(stores).map(function (key) {
+	    return stores[key];
+	  }));
+	}
 
-	    // Store instances should wait for finish. So you can know if all the
-	    // stores are dispatched properly.
-	    deferred = this.waitFor(stores, actionName);
+	// `dispatch` method dispatch the event with `data` (or **payload**)
+	Dispatcher.prototype.dispatch = function (actionName, data) {
+	  var self = this, stores, deferred;
 
-	    /* Payload should send to all related stores. */
+	  this.listener.emit('dispatch', actionName, data);
+	  /* Stores are key-value pairs. Collect store instances into an array. */
+	  stores = (function () {
+	    var stores = [], store;
 	    for (var storeName in self.stores) {
-	      self.stores[storeName].dispatchAction(actionName, data);
-	    }
-
-	    // `dispatch` returns deferred object you can just use **promise**
-	    // for dispatching: `dispatch(..).then(..)`.
-	    return deferred;
-	  };
-
-	  // `waitFor` is actually a _semi-private_ method. Because it's kind of internal
-	  // and you don't need to call it from outside most of the times. It takes
-	  // array of store instances (`[Store, Store, Store, ...]`). It will create
-	  // a promise and return it. _Whenever store changes, it resolves the promise_.
-	  Dispatcher.prototype.waitFor = function (stores, actionName) {
-	    var self = this, promises;
-	    promises = (function () {
-	      var __promises = [], promise;
-
-	      /* `__promiseGenerator` generates a simple promise that resolves itself when
-	          related store is changed. */
-	      function __promiseGenerator(store) {
-	        // `Promise` is `require('es6-promise').Promise` by default.
-	        // you can change it using `DeLorean.Flux.define('Promise', AnotherPromise)`
-	        return new es6.Promise(function (resolve, reject) {
-	          store.listener.once('change', resolve);
-	        });
+	      store = self.stores[storeName];
+	      /* Store value must be an _instance of Store_. */
+	      if (!store instanceof Store) {
+	        throw 'Given store is not a store instance';
 	      }
+	      stores.push(store);
+	    }
+	    return stores;
+	  }());
 
-	      for (var i in stores) {
-	        // Only generate promises for stores that ae listening for this action
-	        if (stores[i].store.actions[actionName] != null) {
-	          promise = __promiseGenerator(stores[i]);
-	          __promises.push(promise);
-	        }
+	  // Store instances should wait for finish. So you can know if all the
+	  // stores are dispatched properly.
+	  deferred = this.waitFor(stores, actionName);
+
+	  /* Payload should send to all related stores. */
+	  for (var storeName in self.stores) {
+	    self.stores[storeName].dispatchAction(actionName, data);
+	  }
+
+	  // `dispatch` returns deferred object you can just use **promise**
+	  // for dispatching: `dispatch(..).then(..)`.
+	  return deferred;
+	};
+
+	// `waitFor` is actually a _semi-private_ method. Because it's kind of internal
+	// and you don't need to call it from outside most of the times. It takes
+	// array of store instances (`[Store, Store, Store, ...]`). It will create
+	// a promise and return it. _Whenever store changes, it resolves the promise_.
+	Dispatcher.prototype.waitFor = function (stores, actionName) {
+	  var self = this, promises;
+	  promises = (function () {
+	    var __promises = [], promise;
+
+	    /* `__promiseGenerator` generates a simple promise that resolves itself when
+	        related store is changed. */
+	    function __promiseGenerator(store) {
+	      // `Promise` is `require('es6-promise').Promise` by default.
+	      // you can change it using `DeLorean.Flux.define('Promise', AnotherPromise)`
+	      return new es6.Promise(function (resolve, reject) {
+	        store.listener.once('change', resolve);
+	      });
+	    }
+
+	    for (var i in stores) {
+	      // Only generate promises for stores that ae listening for this action
+	      if (stores[i].store.actions[actionName] != null) {
+	        promise = __promiseGenerator(stores[i]);
+	        __promises.push(promise);
 	      }
-	      return __promises;
-	    }());
-	    // When all the promises are resolved, dispatcher emits `change:all` event.
-	    return es6.Promise.all(promises).then(function () {
-	      self.listener.emit('change:all');
-	    });
-	  };
-
-	  // `registerAction` method adds a method to the prototype. So you can just use
-	  // `dispatcherInstance.actionName()`.
-	  Dispatcher.prototype.registerAction = function (action, callback) {
-	    /* The callback must be a function. */
-	    if (typeof callback === 'function') {
-	      this[action] = callback.bind(this.stores);
-	    } else {
-	      throw 'Action callback should be a function.';
 	    }
-	  };
+	    return __promises;
+	  }());
+	  // When all the promises are resolved, dispatcher emits `change:all` event.
+	  return es6.Promise.all(promises).then(function () {
+	    self.listener.emit('change:all');
+	  });
+	};
 
-	  // `register` method adds an global action callback to the dispatcher.
-	  Dispatcher.prototype.register = function (callback) {
-	    /* The callback must be a function. */
-	    if (typeof callback === 'function') {
-	      this.listener.on('dispatch', callback);
-	    } else {
-	      throw 'Global callback should be a function.';
-	    }
-	  };
+	// `registerAction` method adds a method to the prototype. So you can just use
+	// `dispatcherInstance.actionName()`.
+	Dispatcher.prototype.registerAction = function (action, callback) {
+	  /* The callback must be a function. */
+	  if (typeof callback === 'function') {
+	    this[action] = callback.bind(this.stores);
+	  } else {
+	    throw 'Action callback should be a function.';
+	  }
+	};
 
-	  // `getStore` returns the store from stores hash.
-	  // You can also use `dispatcherInstance.stores[storeName]` but
-	  // it checks if the store really exists.
-	  Dispatcher.prototype.getStore = function (storeName) {
-	    if (!this.stores[storeName]) {
-	      throw 'Store ' + storeName + ' does not exist.';
-	    }
-	    return this.stores[storeName].store;
-	  };
+	// `register` method adds an global action callback to the dispatcher.
+	Dispatcher.prototype.register = function (callback) {
+	  /* The callback must be a function. */
+	  if (typeof callback === 'function') {
+	    this.listener.on('dispatch', callback);
+	  } else {
+	    throw 'Global callback should be a function.';
+	  }
+	};
 
-	  // ### Shortcuts
+	// `getStore` returns the store from stores hash.
+	// You can also use `dispatcherInstance.stores[storeName]` but
+	// it checks if the store really exists.
+	Dispatcher.prototype.getStore = function (storeName) {
+	  if (!this.stores[storeName]) {
+	    throw 'Store ' + storeName + ' does not exist.';
+	  }
+	  return this.stores[storeName].store;
+	};
 
-	  Dispatcher.prototype.on = function () {
-	    return this.listener.on.apply(this.listener, arguments);
-	  };
+	// ### Shortcuts
 
-	  Dispatcher.prototype.off = function () {
-	    return this.listener.removeListener.apply(this.listener, arguments);
-	  };
+	Dispatcher.prototype.on = function () {
+	  return this.listener.on.apply(this.listener, arguments);
+	};
 
-	  Dispatcher.prototype.emit = function () {
-	    return this.listener.emit.apply(this.listener, arguments);
-	  };
+	Dispatcher.prototype.off = function () {
+	  return this.listener.removeListener.apply(this.listener, arguments);
+	};
 
-	  return Dispatcher;
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	Dispatcher.prototype.emit = function () {
+	  return this.listener.emit.apply(this.listener, arguments);
+	};
+
+	module.exports = Dispatcher;
 
 /***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
-	  "use strict";
-
-	  var utils = __webpack_require__(3);
-	  var EventEmitter = __webpack_require__(5);
+	var utils = __webpack_require__(3);
+	var EventEmitter = __webpack_require__(5);
 
 
 	function Store(store, args) {
@@ -509,200 +508,184 @@
 	  this.listener.on('change', callback);
 	};
 
-	return Store;
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	module.exports = Store;
 
 /***/ },
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
-	  "use strict";
+	function __hasOwn(object, prop) {
+	    return Object.prototype.hasOwnProperty.call(object, prop);
+	}
 
-	    // ## Private Helper Functions
+	  // Use `__generateActionName` function to generate action names.
+	  // E.g. If you create an action with name `hello` it will be
+	  // `action:hello` for the Flux.
+	function __generateActionName(name) {
+	    return 'action:' + name;
+	}
 
-	    // Helper functions are private functions to be used in codebase.
-	    // It's better using two underscore at the beginning of the function.
+	  /* It's used by the schemes to save the original version (not calculated)
+	     of the data. */
+	function __generateOriginalName(name) {
+	    return 'original:' + name;
+	}
 
-	    /* `__hasOwn` function is a shortcut for `Object#hasOwnProperty` */
-	  function __hasOwn(object, prop) {
-	      return Object.prototype.hasOwnProperty.call(object, prop);
-	  }
+	  // `__findDispatcher` is a private function for **React components**.
+	function __findDispatcher(view) {
+	     // Provide a useful error message if no dispatcher is found in the chain
+	    if (view == null) {
+	        throw 'No disaptcher found. The DeLoreanJS mixin requires a "dispatcher" property to be passed to a component, or one of it\'s ancestors.';
+	    }
+	    /* `view` should be a component instance. If a component don't have
+	        any dispatcher, it tries to find a dispatcher from the parents. */
+	    if (!view.props.dispatcher) {
+	        return __findDispatcher(view._owner);
+	    }
+	    return view.props.dispatcher;
+	}
 
-	    // Use `__generateActionName` function to generate action names.
-	    // E.g. If you create an action with name `hello` it will be
-	    // `action:hello` for the Flux.
-	  function __generateActionName(name) {
-	      return 'action:' + name;
-	  }
+	  // `__clone` creates a deep copy of an object.
+	function __clone(obj) {
+	    if (null == obj || "object" != typeof obj) return obj;
+	    var copy = obj.constructor();
+	    for (var attr in obj) {
+	        if (__hasOwn(obj, attr)) {
+	            copy[attr] = __clone(obj[attr]);
+	        }
+	    }
+	    return copy;
+	}
 
-	    /* It's used by the schemes to save the original version (not calculated)
-	       of the data. */
-	  function __generateOriginalName(name) {
-	      return 'original:' + name;
-	  }
-
-	    // `__findDispatcher` is a private function for **React components**.
-	  function __findDispatcher(view) {
-	       // Provide a useful error message if no dispatcher is found in the chain
-	      if (view == null) {
-	          throw 'No disaptcher found. The DeLoreanJS mixin requires a "dispatcher" property to be passed to a component, or one of it\'s ancestors.';
-	      }
-	      /* `view` should be a component instance. If a component don't have
-	          any dispatcher, it tries to find a dispatcher from the parents. */
-	      if (!view.props.dispatcher) {
-	          return __findDispatcher(view._owner);
-	      }
-	      return view.props.dispatcher;
-	  }
-
-	    // `__clone` creates a deep copy of an object.
-	  function __clone(obj) {
-	      if (null == obj || "object" != typeof obj) return obj;
-	      var copy = obj.constructor();
-	      for (var attr in obj) {
-	          if (__hasOwn(obj, attr)) {
-	              copy[attr] = __clone(obj[attr]);
-	          }
-	      }
-	      return copy;
-	  }
-
-	  return {
-	      clone: __clone,
-	      findDispatcher: __findDispatcher,
-	      generateActionName: __generateActionName,
-	      generateOriginalName: __generateOriginalName,
-	      hasOwn: __hasOwn
-	  };
-
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	module.exports = {
+	    clone: __clone,
+	    findDispatcher: __findDispatcher,
+	    generateActionName: __generateActionName,
+	    generateOriginalName: __generateOriginalName,
+	    hasOwn: __hasOwn
+	};
 
 /***/ },
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
-	    "use strict";
+	var utils = __webpack_require__(3);
 
-	    var utils = __webpack_require__(3);
+	module.exports = {
+	    // It should be inserted to the React components which
+	    // used in Flux.
+	    // Simply `mixin: [Flux.mixins.storeListener]` will work.
+	    storeListener: {
 
-	    return {
-	        // It should be inserted to the React components which
-	        // used in Flux.
-	        // Simply `mixin: [Flux.mixins.storeListener]` will work.
-	        storeListener: {
+	        trigger: function () {
+	          this.__dispatcher.emit.apply(this.__dispatcher, arguments);
+	        },
 
-	            trigger: function () {
-	              this.__dispatcher.emit.apply(this.__dispatcher, arguments);
-	            },
+	        // After the component mounted, listen changes of the related stores
+	        componentDidMount: function () {
+	          var self = this, store, storeName;
 
-	            // After the component mounted, listen changes of the related stores
-	            componentDidMount: function () {
-	              var self = this, store, storeName;
-
-	              /* `__changeHandler` is a **listener generator** to pass to the `onChange` function. */
-	              function __changeHandler(store, storeName) {
-	                return function () {
-	                  var state, args;
-	                  /* If the component is mounted, change state. */
-	                  if (self.isMounted()) {
-	                    self.setState(self.getStoreStates());
-	                  }
-	                  // When something changes it calls the components `storeDidChanged` method if exists.
-	                  if (self.storeDidChange) {
-	                    args = [storeName].concat(Array.prototype.slice.call(arguments, 0));
-	                    self.storeDidChange.apply(self, args);
-	                  }
-	                };
+	          /* `__changeHandler` is a **listener generator** to pass to the `onChange` function. */
+	          function __changeHandler(store, storeName) {
+	            return function () {
+	              var state, args;
+	              /* If the component is mounted, change state. */
+	              if (self.isMounted()) {
+	                self.setState(self.getStoreStates());
 	              }
-
-	              // Remember the change handlers so they can be removed later
-	              this.__changeHandlers = {};
-
-	              /* Generate and bind the change handlers to the stores. */
-	              for (storeName in this.__watchStores) {
-	                if (utils.hasOwn(this.stores, storeName)) {
-	                  store = this.stores[storeName];
-	                  this.__changeHandlers[storeName] = __changeHandler(store, storeName);
-	                  store.onChange(this.__changeHandlers[storeName]);
-	                }
+	              // When something changes it calls the components `storeDidChanged` method if exists.
+	              if (self.storeDidChange) {
+	                args = [storeName].concat(Array.prototype.slice.call(arguments, 0));
+	                self.storeDidChange.apply(self, args);
 	              }
-	            },
+	            };
+	          }
 
-	            // When a component unmounted, it should stop listening.
-	            componentWillUnmount: function () {
-	              for (var storeName in this.__changeHandlers) {
-	                if (utils.hasOwn(this.stores, storeName)) {
-	                  var store = this.stores[storeName];
-	                  store.listener.removeListener('change', this.__changeHandlers[storeName]);
-	                }
-	              }
-	            },
+	          // Remember the change handlers so they can be removed later
+	          this.__changeHandlers = {};
 
-	            getInitialState: function () {
-	              var self = this, state, storeName;
-
-	              /* The dispatcher should be easy to access and it should use `__findDispatcher`
-	                 method to find the parent dispatchers. */
-	              this.__dispatcher = utils.findDispatcher(this);
-
-	              // If `storesDidChange` method presents, it'll be called after all the stores
-	              // were changed.
-	              if (this.storesDidChange) {
-	                this.__dispatcher.on('change:all', function () {
-	                  self.storesDidChange();
-	                });
-	              }
-
-	              // Since `dispatcher.stores` is harder to write, there's a shortcut for it.
-	              // You can use `this.stores` from the React component.
-	              this.stores = this.__dispatcher.stores;
-
-	              this.__watchStores = {};
-	              if (this.watchStores != null) {
-	                for (var i = 0; i < this.watchStores.length;  i++) {
-	                  storeName = this.watchStores[i];
-	                  this.__watchStores[storeName] = this.stores[storeName];
-	                }
-	              } else {
-	                this.__watchStores = this.stores;
-	                if (console != null && Object.keys != null && Object.keys(this.stores).length > 4) {
-	                  console.warn('Your component is watching changes on all stores, you may want to define a "watchStores" property in order to only watch stores relevant to this component.');
-	                }
-	              }
-
-	              return this.getStoreStates();
-	            },
-
-	            getStoreStates: function () {
-	              var state = {stores: {}}, store;
-
-	              /* Set `state.stores` for all present stores with a `setState` method defined. */
-	              for (var storeName in this.__watchStores) {
-	                if (utils.hasOwn(this.stores, storeName)) {
-	                  state.stores[storeName] = {};
-	                  store = this.__watchStores[storeName].store;
-	                  if (store && store.getState) {
-	                    state.stores[storeName] = store.getState();
-	                  } else if (typeof store.scheme === 'object') {
-	                    var scheme = store.scheme;
-	                    for (var keyName in scheme) {
-	                      state.stores[storeName][keyName] = store[keyName];
-	                    }
-	                  }
-	                }
-	              }
-	              return state;
-	            },
-
-	            // `getStore` is a shortcut to get the store from the state.
-	            getStore: function (storeName) {
-	              return this.state.stores[storeName];
+	          /* Generate and bind the change handlers to the stores. */
+	          for (storeName in this.__watchStores) {
+	            if (utils.hasOwn(this.stores, storeName)) {
+	              store = this.stores[storeName];
+	              this.__changeHandlers[storeName] = __changeHandler(store, storeName);
+	              store.onChange(this.__changeHandlers[storeName]);
 	            }
+	          }
+	        },
+
+	        // When a component unmounted, it should stop listening.
+	        componentWillUnmount: function () {
+	          for (var storeName in this.__changeHandlers) {
+	            if (utils.hasOwn(this.stores, storeName)) {
+	              var store = this.stores[storeName];
+	              store.listener.removeListener('change', this.__changeHandlers[storeName]);
+	            }
+	          }
+	        },
+
+	        getInitialState: function () {
+	          var self = this, state, storeName;
+
+	          /* The dispatcher should be easy to access and it should use `__findDispatcher`
+	             method to find the parent dispatchers. */
+	          this.__dispatcher = utils.findDispatcher(this);
+
+	          // If `storesDidChange` method presents, it'll be called after all the stores
+	          // were changed.
+	          if (this.storesDidChange) {
+	            this.__dispatcher.on('change:all', function () {
+	              self.storesDidChange();
+	            });
+	          }
+
+	          // Since `dispatcher.stores` is harder to write, there's a shortcut for it.
+	          // You can use `this.stores` from the React component.
+	          this.stores = this.__dispatcher.stores;
+
+	          this.__watchStores = {};
+	          if (this.watchStores != null) {
+	            for (var i = 0; i < this.watchStores.length;  i++) {
+	              storeName = this.watchStores[i];
+	              this.__watchStores[storeName] = this.stores[storeName];
+	            }
+	          } else {
+	            this.__watchStores = this.stores;
+	            if (console != null && Object.keys != null && Object.keys(this.stores).length > 4) {
+	              console.warn('Your component is watching changes on all stores, you may want to define a "watchStores" property in order to only watch stores relevant to this component.');
+	            }
+	          }
+
+	          return this.getStoreStates();
+	        },
+
+	        getStoreStates: function () {
+	          var state = {stores: {}}, store;
+
+	          /* Set `state.stores` for all present stores with a `setState` method defined. */
+	          for (var storeName in this.__watchStores) {
+	            if (utils.hasOwn(this.stores, storeName)) {
+	              state.stores[storeName] = {};
+	              store = this.__watchStores[storeName].store;
+	              if (store && store.getState) {
+	                state.stores[storeName] = store.getState();
+	              } else if (typeof store.scheme === 'object') {
+	                var scheme = store.scheme;
+	                for (var keyName in scheme) {
+	                  state.stores[storeName][keyName] = store[keyName];
+	                }
+	              }
+	            }
+	          }
+	          return state;
+	        },
+
+	        // `getStore` is a shortcut to get the store from the state.
+	        getStore: function (storeName) {
+	          return this.state.stores[storeName];
 	        }
-	    };
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    }
+	};
 
 
 
@@ -2140,7 +2123,7 @@
 	    };
 
 	    /* global define:true module:true window: true */
-	    if ("function" === 'function' && __webpack_require__(8)['amd']) {
+	    if ("function" === 'function' && __webpack_require__(7)['amd']) {
 	      !(__WEBPACK_AMD_DEFINE_RESULT__ = function() { return es6$promise$umd$$ES6Promise; }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	    } else if (typeof module !== 'undefined' && module['exports']) {
 	      module['exports'] = es6$promise$umd$$ES6Promise;
@@ -2148,10 +2131,33 @@
 	      this['ES6Promise'] = es6$promise$umd$$ES6Promise;
 	    }
 	}).call(this);
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), (function() { return this; }()), __webpack_require__(9)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9), (function() { return this; }()), __webpack_require__(8)(module)))
 
 /***/ },
 /* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function() { throw new Error("define cannot be used indirect"); };
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function(module) {
+		if(!module.webpackPolyfill) {
+			module.deprecate = function() {};
+			module.paths = [];
+			// module.parent = undefined by default
+			module.children = [];
+			module.webpackPolyfill = 1;
+		}
+		return module;
+	}
+
+
+/***/ },
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// shim for using process in browser
@@ -2242,28 +2248,6 @@
 	};
 
 
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = function() { throw new Error("define cannot be used indirect"); };
-
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = function(module) {
-		if(!module.webpackPolyfill) {
-			module.deprecate = function() {};
-			module.paths = [];
-			// module.parent = undefined by default
-			module.children = [];
-			module.webpackPolyfill = 1;
-		}
-		return module;
-	}
-
-
 /***/ }
 /******/ ])
+});
